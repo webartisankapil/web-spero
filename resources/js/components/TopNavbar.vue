@@ -5,20 +5,70 @@
        <h2>Webspero</h2>
       </a>
       <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link notification" href="#"><i class="fa fa-shopping-cart" style="font-size:28px;"><span class="badge">0</span></i></a>
+        <li class="nav-item mr-2">
+          <a class="nav-link notification" href="/cart"><i class="fa fa-shopping-cart" style="font-size:28px;" title="items"><span class="badge">{{items}}</span></i></a>
         </li>
+        <template v-if="user">
+          <li class="nav-item" >
+            <a class="nav-link mt-2" >
+              {{ user.name }}
+            </a>
+          </li>
+          <li class="nav-item" >
+            <button type="button" class="btn btn-info btn-sm nav-link mt-2" @click="logout">
+              <i class="fa fa-sign-out">Log out</i>
+            </button>
+          </li>
+        </template>
+        <template v-else>
+          <li class="nav-item" >
+            <a href="/login" class="btn btn-primary btn-sm nav-link mt-2">
+              <i class="fa fa-sign-out">Log In</i>
+            </a>
+          </li>
+        </template>
       </ul>
     </div>
   </nav>
 </template>
 
 <script>
-    export default {
-        mounted() {
-            console.log('Component navbar.')
+import {bus} from '../app';
+export default {
+    data() {
+        return {
+          items : 0,
+          user : null
         }
+    },
+    created (){
+      bus.$on('updateCart', () => {
+        this.countItems();
+      });
+    },
+    mounted() {
+        this.user = window.user ? window.user : null;
+        this.countItems();
+    },
+    methods : {
+      countItems() {
+        axios.get('/cart/count-items').then(resp => {
+            if (resp.status == 200) {
+                this.items = resp.data.items;
+            }
+        });
+      },
+      logout() {
+        axios.post('/logout').then(resp =>{
+            if (resp.status == 204) {
+                window.location.reload();
+            }
+        }).catch(err => {
+            console.log(err);
+        });
+      }
     }
+}
 </script>
 <style scoped>
 .notification {

@@ -38,26 +38,48 @@
         </div>
         <div class="row justify-content-center">
             <div class="col-md-8 col-span-2">
-              <button type="button" class="btn btn-info mt-2" disabled style="width: 100%" name="button"><i class="fa fa-shopping-cart" aria-hidden="true"> Add to cart</i></button>
+              <button  v-if="product.instock" type="button" class="btn btn-info mt-2" @click="addToCart(product.id)" style="width: 100%" name="button"><i class="fa fa-shopping-cart" aria-hidden="true"> Add to cart</i></button>
+              <button  v-else type="button" disabled class="btn btn-info mt-2" style="width: 100%" name="button"><i class="fa fa-shopping-cart" aria-hidden="true"> Out Of stock</i></button>
             </div>
         </div>
     </div>
   </div>
 </template>
 <script>
-  export default {
-    props: ['product'],
-    mounted () {
-      console.log('productDetails');
-      console.log(this.product);
+import {bus} from '../app';
+export default {
+  data() {
+    return {
+      user: null,
+    }
+  },
+  props: ['product'],
+  mounted () {
+    this.user = window.user ? window.user : null;
+  },
+  methods : {
+    backToProducts() {
+      this.$emit('clicked')
     },
-    methods : {
-      backToProducts() {
-        this.$emit('clicked')
-      },
-      imageNotFound(event) {
-         event.target.src = "/images/image-not-found.jpg"
-      }
+    imageNotFound(event) {
+       event.target.src = "/images/image-not-found.jpg"
+    },
+    addToCart(id) {
+        if (this.user == null) {
+          alert('To add this product to cart you have to login first');
+          return;
+        }
+        if(confirm("Do you really want to add to cart ?")){
+          axios.post('/cart/add', {productId:id}).then(resp =>{
+            console.log(resp.status);
+            if (resp.status == 200) {
+                bus.$emit('updateCart');
+            }
+          }).catch(err => {
+              alert(err.response.data.message);
+          });
+        }
     }
   }
+}
 </script>

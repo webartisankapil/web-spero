@@ -21,9 +21,13 @@ window.Vue = require('vue').default;
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('products-component', require('./components/ProductsComponent.vue').default);
+Vue.component('shopping-cart', require('./components/ShoppingCart.vue').default);
 Vue.component('top-nav', require('./components/TopNavbar.vue').default);
 
-Vue.component('paginate', require('vuejs-paginate'))
+Vue.component('paginate', require('vuejs-paginate'));
+
+export const bus = new Vue();
+// const bus = new Vue();
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

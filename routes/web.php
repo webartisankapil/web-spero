@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CartController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,3 +26,10 @@ Route::get('/home', [ProductController::class, 'index'])->name('home');
 
 Route::get('/products', [ProductController::class, 'getProducts']);
 Route::get('/products/{id}', [ProductController::class, 'show']);
+
+Route::get('/cart', [CartController::class, 'index'])->middleware('auth');
+Route::get('/cart/count-items', [CartController::class, 'countItems']);
+Route::post('/cart/add', [CartController::class, 'add']);
+Route::get('/cart/items', [CartController::class, 'getItems']);
+Route::post('/cart/remove', [CartController::class, 'removeItem']);
+Route::post('/cart/update', [CartController::class, 'updateItem']);

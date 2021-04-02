@@ -13,17 +13,22 @@
         <!-- Styles -->
         <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/components/menu.min.css">
-        <!-- <link rel="stylesheet" type="text/css" href="https://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.css"> -->
-        <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> -->
         <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
         <!-- Scripts -->
         <script src="{{ mix('js/app.js') }}" defer></script>
+        <script>
+            window.user = @json(Auth::user());
+        </script>
     </head>
     <body>
         <div id="app">
             <top-nav></top-nav/>
-            <products-component><products-component/>
+            @if(isset($component) && $component == 'shoppingCart')
+              <shopping-cart><shopping-cart/>
+            @else
+              <products-component><products-component/>
+            @endif
         </div>
     </body>
 </html>

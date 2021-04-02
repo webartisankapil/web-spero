@@ -27,7 +27,9 @@
                         <img :src="product.image_url" @error="imageNotFound" width="40" height="30"/>
                       </td>
                       <td>{{product.price}}</td>
-                      <td>{{product.instock}}</td>
+                      <td>
+                          <span class="badge badge-pill" :class="product.instock ? 'badge-success' : 'badge-danger'">{{product.instock ? 'In stock' : 'Out of stock'}}</span>
+                      </td>
                       <td>{{product.size.toUpperCase()}}</td>
                       <td><a href="javaScript:void(0)" @click="getProductDetail(product.id)">view</a></td>
                     </tr>
@@ -83,11 +85,11 @@
         },
         methods: {
           getProducts(){
-            axios.get('/products?page='+this.page).then(resp =>{
-              var products = resp.data.products;
-              this.products = products.data;
-              this.total = products.last_page;
-            });
+              axios.get('/products?page='+this.page).then(resp =>{
+                var products = resp.data.products;
+                this.products = products.data;
+                this.total = products.last_page;
+              });
           },
           getProductDetail(id)
           {
